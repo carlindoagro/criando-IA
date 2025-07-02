@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Você decide o futuro da IA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .caixa-principal {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .caixa-perguntas {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .pergunta {
+            font-size: 1.3em;
+            line-height: 1.6;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .caixa-alternativas {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .alternativa {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 15px;
+            padding: 20px 25px;
+            color: white;
+            font-size: 1.1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            line-height: 1.5;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .alternativa:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #5a6fd8, #6a42a0);
+        }
+
+        .alternativa:active {
+            transform: translateY(-1px);
+        }
+
+        .caixa-resultado {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.6s ease-in;
+            box-shadow: 0 10px 30px rgba(46, 204, 113, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .texto-resultado {
+            color: white;
+            font-size: 1.4em;
+            line-height: 1.6;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .progresso {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progresso-barra {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .botao-reiniciar {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            border-radius: 25px;
+            padding: 12px 30px;
+            color: white;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .botao-reiniciar:hover {
+            background: white;
+            color: #27ae60;
+            transform: translateY(-2px);
+        }
+
+        .cenario {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 10px;
+            border-left: 3px solid #667eea;
+        }
+
+        @media (max-width: 600px) {
+            .caixa-principal {
+                padding: 25px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .pergunta {
+                font-size: 1.1em;
+            }
+            
+            .alternativa {
+                padding: 15px 20px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="caixa-principal">
+        <h1>Você decide o futuro da IA</h1>
+        <div class="progresso">
+            <div class="progresso-barra" style="width: 0%"></div>
+        </div>
+        <div class="caixa-perguntas"></div>
+        <div class="caixa-alternativas"></div>
+        <div class="caixa-resultado">
+            <p class="texto-resultado"></p>
+            <button class="botao-reiniciar" onclick="reiniciarJogo()">🔄 Jogar Novamente</button>
+        </div>
+    </div>
+
+    <script>
+        const perguntas = [
+            {
+                enunciado: "Sua escola implementa um sistema de IA que monitora constantemente o comportamento dos alunos para prevenir bullying e melhorar o desempenho acadêmico. Qual sua opinião?",
+                cenario: "🎓 Cenário: IA na Educação",
+                alternativas: [
+                    {
+                        texto: "Apoio totalmente - a tecnologia pode criar um ambiente mais seguro e personalizar o aprendizado",
+                        afirmacao: "tecnologia_seguranca"
+                    },
+                    {
+                        texto: "Sou contra - isso viola a privacidade e pode inibir a espontaneidade dos estudantes",
+                        afirmacao: "privacidade_liberdade"
+                    }
+                ]
+            },
+            {
+                enunciado: "Uma rede social usa IA para analisar suas fotos, mensagens e comportamento online, oferecendo conteúdo personalizado e detectando sinais de depressão para sugerir ajuda. Como você reage?",
+                cenario: "📱 Cenário: IA nas Redes Sociais",
+                alternativas: [
+                    {
+                        texto: "Aceito - é útil ter conteúdo relevante e apoio para saúde mental quando necessário",
+                        afirmacao: "conveniencia_suporte"
+                    },
+                    {
+                        texto: "Rejeito - prefiro manter meus dados privados e fazer minhas próprias escolhas de conteúdo",
+                        afirmacao: "autonomia_privacidade"
+                    }
+                ]
+            },
+            {
+                enunciado: "Sua cidade planeja usar IA para otimizar o trânsito, controlando semáforos e sugerindo rotas em tempo real através de câmeras e sensores. Qual sua posição?",
+                cenario: "🚦 Cenário: Cidade Inteligente",
+                alternativas: [
+                    {
+                        texto: "Excelente ideia - vai reduzir congestionamentos e melhorar a qualidade de vida urbana",
+                        afirmacao: "eficiencia_progresso"
+                    },
+                    {
+                        texto: "Preocupante - muito controle e vigilância pode limitar nossa liberdade de movimento",
+                        afirmacao: "liberdade_vigilancia"
+                    }
+                ]
+            },
+            {
+                enunciado: "Um aplicativo de IA promete ajudar você a encontrar o parceiro ideal analisando sua personalidade, histórico de relacionamentos e preferências. Você usaria?",
+                cenario: "❤️ Cenário: IA nos Relacionamentos",
+                alternativas: [
+                    {
+                        texto: "Sim, usaria - a tecnologia pode me ajudar a encontrar alguém mais compatível",
+                        afirmacao: "otimizacao_relacionamentos"
+                    },
+                    {
+                        texto: "Não usaria - relacionamentos são sobre conexões humanas espontâneas, não algoritmos",
+                        afirmacao: "autenticidade_humana"
+                    }
+                ]
+            },
+            {
+                enunciado: "Uma IA é capaz de prever com 90% de precisão se uma pessoa cometerá um crime nos próximos 5 anos. Como essa tecnologia deveria ser usada?",
+                cenario: "⚖️ Cenário: IA Preditiva",
+                alternativas: [
+                    {
+                        texto: "Usar para prevenção - oferecer programas de apoio e recursos antes que problemas aconteçam",
+                        afirmacao: "prevencao_social"
+                    },
+                    {
+                        texto: "Não usar - ninguém deve ser julgado por crimes que ainda não cometeu",
+                        afirmacao: "justica_presuncao"
+                    }
+                ]
+            }
+        ];
+
+        let atual = 0;
+        let historiaFinal = "";
+
+        function mostraProgresso() {
+            const progresso = ((atual + 1) / perguntas.length) * 100;
+            document.querySelector('.progresso-barra').style.width = progresso + '%';
+        }
+
+        function mostraPergunta() {
+            if (atual >= perguntas.length) {
+                mostraResultado();
+                return;
+            }
+
+            mostraProgresso();
+            const perguntaAtual = perguntas[atual];
+            const caixaPerguntas = document.querySelector(".caixa-perguntas");
+            const caixaAlternativas = document.querySelector(".caixa-alternativas");
+
+            caixaPerguntas.innerHTML = `
+                <div class="cenario">${perguntaAtual.cenario}</div>
+                <div class="pergunta">${perguntaAtual.enunciado}</div>
+            `;
+
+            caixaAlternativas.innerHTML = "";
+            perguntaAtual.alternativas.forEach((alternativa, index) => {
+                const botaoAlternativa = document.createElement("button");
+                botaoAlternativa.textContent = alternativa.texto;
+                botaoAlternativa.className = "alternativa";
+                botaoAlternativa.addEventListener("click", () => respostaSelecionada(index));
+                caixaAlternativas.appendChild(botaoAlternativa);
+            });
+        }
+
+        function respostaSelecionada(opcaoSelecionada) {
+            const afirmacoes = perguntas[atual].alternativas[opcaoSelecionada].afirmacao;
+            historiaFinal += afirmacoes + ",";
+            atual++;
+            mostraPergunta();
+        }
+
+        function mostraResultado() {
+            const caixaPerguntas = document.querySelector(".caixa-perguntas");
+            const caixaAlternativas = document.querySelector(".caixa-alternativas");
+            const caixaResultado = document.querySelector(".caixa-resultado");
+            const textoResultado = document.querySelector(".texto-resultado");
+
+            caixaPerguntas.style.display = "none";
+            caixaAlternativas.style.display = "none";
+            caixaResultado.style.display = "block";
+
+            // Análise do perfil baseado nas escolhas
+            let perfil = analisarPerfil();
+            
+            textoResultado.innerHTML = `
+                <h2 style="margin-bottom: 20px; font-size: 1.6em;">🎯 Seu Perfil de Decisão sobre IA</h2>
+                <div style="background: rgba(255,255,255,0.2); padding: 20px; border-radius: 10px; margin-bottom: 20px; text-align: left; line-height: 1.8; white-space: pre-line;">
+                    ${perfil.descricao}
+                </div>
+            `;
+        }
+
+        function analisarPerfil() {
+            const escolhas = historiaFinal.split(',').filter(e => e.length > 0);
+            
+            // Contar tendências
+            let contadorTecnologia = 0;
+            let contadorHumano = 0;
+            
+            escolhas.forEach(escolha => {
+                if (escolha.includes('tecnologia') || escolha.includes('eficiencia') || 
+                    escolha.includes('conveniencia') || escolha.includes('otimizacao') || 
+                    escolha.includes('prevencao')) {
+                    contadorTecnologia++;
+                } else {
+                    contadorHumano++;
+                }
+            });
+            
+            // Gerar texto baseado nas escolhas
+            let textoFinal = "Baseado em suas escolhas, aqui está sua visão sobre o futuro da IA:\n\n";
+            
+            if (contadorTecnologia >= 4) {
+                textoFinal += "🤖 PERFIL: ENTUSIASTA TECNOLÓGICO\n\n";
+                textoFinal += "Você demonstra uma forte confiança no poder da tecnologia para melhorar nossas vidas. ";
+                textoFinal += "Acredita que a IA pode resolver problemas complexos e está disposto a aceitar mudanças ";
+                textoFinal += "significativas em troca de maior eficiência e conveniência. Você vê a tecnologia como ";
+                textoFinal += "uma aliada na construção de um futuro melhor, mesmo que isso signifique ceder algum ";
+                textoFinal += "controle para sistemas inteligentes. Sua visão é otimista sobre a capacidade da IA ";
+                textoFinal += "de tomar decisões benéficas para a sociedade.";
+            } else if (contadorHumano >= 4) {
+                textoFinal += "🛡️ PERFIL: GUARDIÃO DA HUMANIDADE\n\n";
+                textoFinal += "Você prioriza valores humanos fundamentais como privacidade, liberdade e autenticidade. ";
+                textoFinal += "Embora reconheça os benefícios da IA, você mantém uma postura cautelosa, preferindo ";
+                textoFinal += "preservar a autonomia humana e as conexões genuínas. Acredita que algumas coisas são ";
+                textoFinal += "sagradas demais para serem delegadas a máquinas, como relacionamentos, criatividade e ";
+                textoFinal += "julgamentos morais. Sua abordagem é de que a tecnologia deve servir à humanidade, ";
+                textoFinal += "não o contrário.";
+            } else {
+                textoFinal += "⚖️ PERFIL: EQUILIBRISTA DIGITAL\n\n";
+                textoFinal += "Você demonstra uma abordagem equilibrada em relação à IA, reconhecendo tanto seus ";
+                textoFinal += "benefícios quanto seus riscos. Suas escolhas mostram que você avalia cada situação ";
+                textoFinal += "individualmente, às vezes favorecendo a eficiência tecnológica e outras vezes priorizando ";
+                textoFinal += "valores humanos. Você busca o melhor dos dois mundos, tentando aproveitar as vantagens ";
+                textoFinal += "da IA sem comprometer aspectos essenciais da experiência humana. Sua visão é pragmática ";
+                textoFinal += "e adaptável.";
+            }
+            
+            // Adicionar análise específica das escolhas
+            textoFinal += "\n\n📊 ANÁLISE DAS SUAS DECISÕES:\n\n";
+            
+            if (escolhas.includes('tecnologia_seguranca')) {
+                textoFinal += "• EDUCAÇÃO: Você vê valor no uso da IA para criar ambientes educacionais mais seguros e personalizados.\n";
+            } else if (escolhas.includes('privacidade_liberdade')) {
+                textoFinal += "• EDUCAÇÃO: Você prioriza a privacidade e espontaneidade dos estudantes sobre a vigilância tecnológica.\n";
+            }
+            
+            if (escolhas.includes('conveniencia_suporte')) {
+                textoFinal += "• REDES SOCIAIS: Você aceita análise de dados pessoais em troca de conteúdo relevante e suporte.\n";
+            } else if (escolhas.includes('autonomia_privacidade')) {
+                textoFinal += "• REDES SOCIAIS: Você prefere manter controle sobre seus dados e escolhas de conteúdo.\n";
+            }
+            
+            if (escolhas.includes('eficiencia_progresso')) {
+                textoFinal += "• CIDADE INTELIGENTE: Você apoia o uso da IA para otimizar sistemas urbanos e melhorar a qualidade de vida.\n";
+            } else if (escolhas.includes('liberdade_vigilancia')) {
+                textoFinal += "• CIDADE INTELIGENTE: Você se preocupa com o excesso de vigilância e controle sobre os cidadãos.\n";
+            }
+            
+            if (escolhas.includes('otimizacao_relacionamentos')) {
+                textoFinal += "• RELACIONAMENTOS: Você confia na IA para ajudar a encontrar compatibilidade romântica.\n";
+            } else if (escolhas.includes('autenticidade_humana')) {
+                textoFinal += "• RELACIONAMENTOS: Você valoriza conexões humanas espontâneas sobre algoritmos de compatibilidade.\n";
+            }
+            
+            if (escolhas.includes('prevencao_social')) {
+                textoFinal += "• JUSTIÇA PREDITIVA: Você apoia o uso da IA para prevenção e suporte social proativo.\n";
+            } else if (escolhas.includes('justica_presuncao')) {
+                textoFinal += "• JUSTIÇA PREDITIVA: Você defende a presunção de inocência e rejeita julgamentos pré-crime.\n";
+            }
+            
+            return {
+                titulo: "",
+                descricao: textoFinal
+            };
+        }
+
+        function reiniciarJogo() {
+            atual = 0;
+            historiaFinal = "";
+            document.querySelector(".caixa-perguntas").style.display = "block";
+            document.querySelector(".caixa-alternativas").style.display = "block";
+            document.querySelector(".caixa-resultado").style.display = "none";
+            document.querySelector('.progresso-barra').style.width = "0%";
+            mostraPergunta();
+        }
+
+        // Iniciar o jogo
+        mostraPergunta();
+    </script>
+</body>
+</html>
